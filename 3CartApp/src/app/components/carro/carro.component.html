@@ -1,0 +1,34 @@
+<h2>Carro de compras</h2>
+
+<table class="table table-hover table-striped">
+    <thead>
+        <tr>
+            <th>Producto</th>
+            <th>Precio</th>
+            <th>Cantidad</th>
+            <th>Total</th>
+            <th>Eliminar </th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (item of items; track $index) {
+            <tr>
+                <td>Producto: {{item.product.name}}</td>
+                <td>Precio: {{item.product.price}}</td>
+                <td>Cantidad: {{item.quantity}}</td>
+                <td>Total: {{item.product.price * item.quantity}}</td>
+                <td>
+                    <button (click)="onDeleteCart(item.product.id)" class="btn btn-danger btn-sm">
+                    Eliminar
+                    </button>
+                </td>
+            </tr>
+        }
+    </tbody>
+    <tfoot>
+        <tr>
+            <td class="fw-bold text-end" colspan="3">Total</td>
+            <td class="fw-bold text-start" colspan="2">{{total}}</td>
+        </tr>
+    </tfoot>
+</table>
