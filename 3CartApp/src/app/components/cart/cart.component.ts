@@ -4,11 +4,12 @@ import { Product } from '../../models/product';
 import { CatalogoComponent } from '../catalogo/catalogo.component';
 import { CarroComponent } from '../carro/carro.component';
 import { cartItem } from '../../models/cart-item';
+import { NavbarComponent } from '../navbar/navbar.component';
 
 @Component({
   selector: 'app-cart',
   standalone: true,
-  imports: [CatalogoComponent, CarroComponent],
+  imports: [CatalogoComponent, CarroComponent, NavbarComponent],
   templateUrl: './cart.component.html',
   styleUrl: './cart.component.css'
 })
@@ -18,7 +19,7 @@ export class CartComponent  implements OnInit{
 
   items: cartItem[] = []
 
-  total: number = 0
+  //total: number = 0
 
   showCart: boolean = false
   
@@ -26,8 +27,8 @@ export class CartComponent  implements OnInit{
   
   ngOnInit(): void {
     this.products = this.productS.findAll()
-    this.items = JSON.parse(sessionStorage.getItem('cart')!) || []
-    this.calculatedTotal()
+    this.items = JSON.parse(sessionStorage.getItem('cart') || '[]')
+    //this.calculatedTotal()
   }
 
   onAddCart(product: Product){
@@ -48,24 +49,27 @@ export class CartComponent  implements OnInit{
     }else{
       this.items = [... this.items, {product: {... product}, quantity: 1}]
     }
-    this.calculatedTotal()
-    this.saveSessions()
+    //this.calculatedTotal()
+    //this.saveSessions()
   }
 
   onDeleteCart(id: number): void {
     this.items = this.items.filter( item => item.product.id !== id)
-    this.calculatedTotal()
-    this.saveSessions()
+    if(this.items.length == 0){
+      sessionStorage.removeItem('cart')
+    }
+    //this.calculatedTotal()
+    //this.saveSessions()
   }
 
-  calculatedTotal(): void{
-    this.total = this.items.reduce( (accumulator, item ) => accumulator + item.quantity * item.product.price, 0)
-    
-  }
+  //calculatedTotal(): void{
+  //  this.total = this.items.reduce( (accumulator, item ) => accumulator + item.quantity * item.product.price, 0)
+  //  
+  //}
 
-  saveSessions(): void{
-    sessionStorage.setItem('cart', JSON.stringify(this.items))
-  }
+  //saveSessions(): void{
+  //  sessionStorage.setItem('cart', JSON.stringify(this.items))
+  //}
 
   openCart(): void {
     this.showCart = !this.showCart
