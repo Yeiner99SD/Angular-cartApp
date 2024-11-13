@@ -1,5 +1,7 @@
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, inject,  } from '@angular/core';
 import { cartItem } from '../../models/cart-item';
+import { Router } from '@angular/router';
+import { SharingDataService } from '../../services/sharing-data.service';
 
 @Component({
   selector: 'app-carro',
@@ -8,32 +10,23 @@ import { cartItem } from '../../models/cart-item';
   templateUrl: './carro.component.html',
   styleUrl: './carro.component.css'
 })
-export class CarroComponent implements OnChanges {
+export class CarroComponent {
   
   
-  @Input() items: cartItem[] = []
-  @Input() total= 0
-  @Output() idProductEventEmitter = new EventEmitter()
-  
-  ngOnChanges(changes: SimpleChanges): void {
-    let itemsChanges = changes['items']
-    this.calculatedTotal()
-    if(!itemsChanges.firstChange){
-      this.saveSessions()
-    }
-  }
-                               
+  items: cartItem[] = []
+  total= 0
+  private sharingDataS= inject(SharingDataService)
 
-  onDeleteCart(id: number) {
-    this.idProductEventEmitter.emit(id)
-  }
-  calculatedTotal(): void{
-    this.total = this.items.reduce( (accumulator, item ) => accumulator + item.quantity * item.product.price, 0)
+   constructor(private router:Router){
+    this.items = this.router.getCurrentNavigation()?.extras.state!['items']
+    this.total = this.router.getCurrentNavigation()?.extras.state!['total']
     
+   }
+  
+                             
+  onDeleteCart(id: number) {
+    this.sharingDataS.idProductEventEmitter.emit(id)
   }
-
-  saveSessions(): void{
-    sessionStorage.setItem('cart', JSON.stringify(this.items))
-  }
+  
 
 }
