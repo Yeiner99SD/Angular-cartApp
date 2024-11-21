@@ -13,7 +13,7 @@ import { RouterModule } from '@angular/router';
 export class NavbarComponent {
 
   @Input() items: cartItem[] = []
-  @Input() total:number = 0
+
    products: any;
  
  

@@ -4,6 +4,9 @@ import { ProductCardComponent } from '../product-card/product-card.component';
 import { Router } from '@angular/router';
 import { SharingDataService } from '../../services/sharing-data.service';
 import { ProductService } from '../../services/product.service';
+import { Store } from '@ngrx/store';
+import { state } from '@angular/animations';
+import { load } from '../../store/product.action';
 
 @Component({
   selector: 'app-catalogo',
@@ -19,13 +22,13 @@ export class CatalogoComponent implements OnInit {
   private sharingDataS= inject(SharingDataService)
  
 
-  constructor( private productService: ProductService){
-    
-
+  constructor( private productService: ProductService, private store: Store<{products: any}>) {
+    this.store.select('products').subscribe(state => this.products = state.products)
   }
+
   ngOnInit(): void {
    
-      this.products = this.productService.findAll()
+      this.store.dispatch(load({products: this.productService.findAll()}))
     
   }
 
